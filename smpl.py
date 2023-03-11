@@ -1,10 +1,12 @@
 from flask import Flask 
-from flask_restful import Resource, Api
+from flask_restful import Resource, Api, reqparse
 
 app = Flask("Videos_API")
 
 api = Api(app)
 
+parser = reqparse.RequestParser()
+parser.add_argument('title', required=True)
 
 videos = {
     'vid_1': {'title': "Harry Potter"},
@@ -16,7 +18,16 @@ videos = {
 
 class Video(Resource):
     def get (self, video_id):
+        if video_id == "all":
+            return videos
         return videos[video_id]
+    
+    def put(self, video_id):
+        args = parser.parse_args()
+        new_video = {'title': args['title']}
+        videos[video_id] = new_video
+        return {video_id: videos[video_id]}, 201
+
 
 
 
