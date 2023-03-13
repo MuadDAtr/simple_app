@@ -34,9 +34,21 @@ class Video(Resource):
         del videos[video_id]
         return "", 204
 
+class VideoSchedule(Resource):
+
+    def get(self):
+        return videos
+    
+    def post(self):
+        args = parser.parse_args()
+        new_video  = {'title': args['title']}
+        video_id = max(int(vid.lstrip('vid_')) for vid in videos.keys()) + 1
+        videos[video_id] = new_video
+        return videos[video_id], 201
 
 
 api.add_resource(Video, '/videos/<video_id>')
+api.add_resource(VideoSchedule, '/videos')
 
 if __name__ == '__main__':
     app.run()
