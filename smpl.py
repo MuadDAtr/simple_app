@@ -1,5 +1,5 @@
 from flask import Flask 
-from flask_restful import Resource, Api, reqparse
+from flask_restful import Resource, Api, reqparse, abort
 
 app = Flask("Videos_API")
 
@@ -27,7 +27,12 @@ class Video(Resource):
         new_video = {'title': args['title']}
         videos[video_id] = new_video
         return {video_id: videos[video_id]}, 201
-
+    
+    def delete(self, video_id):
+        if video_id not in videos:
+            abort(404, message= f"Video {video_id} not found") 
+        del videos[video_id]
+        return "", 204
 
 
 
