@@ -45,6 +45,7 @@ class VideoSchedule(Resource):
         args = parser.parse_args()
         new_video  = {'title': args['title']}
         video_id = max(int(vid.lstrip('vid_')) for vid in videos.keys()) + 1
+        video_id = f"Vid_{video_id}"
         videos[video_id] = new_video
         return videos[video_id], 201
 
