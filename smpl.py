@@ -1,6 +1,8 @@
 from flask import Flask 
 from flask_restful import Resource, Api, reqparse, abort
 
+import json
+
 app = Flask("Videos_API")
 
 api = Api(app)
@@ -16,6 +18,16 @@ videos = {
 
 }
 
+def write_to_file():
+    global videos
+    videos = {k: v for k, v in sorted(videos.items(), key=lambda video: video[1]['title'])}
+    with open('videos.json', 'w') as func:
+        json.dump(videos, func)
+
+write_to_file()
+
+
+
 class Video(Resource):
     def get (self, video_id):
         if video_id == "all":
@@ -28,6 +40,7 @@ class Video(Resource):
         args = parser.parse_args()
         new_video = {'title': args['title']}
         videos[video_id] = new_video
+        write_to_file()
         return {video_id: videos[video_id]}, 201
     
     def delete(self, video_id):
